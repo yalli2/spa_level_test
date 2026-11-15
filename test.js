@@ -116,7 +116,7 @@
     const n=ST.records.length;
     let html=`<section class="hero wrap">
       <h1>Prueba de <em>nivel</em></h1>
-      <p>A1~C2 중 레벨을 고르면 <b>문법 15세트 + 어휘 15세트마다 1문제씩, 총 30문제</b>를 무작위로 출제합니다. 칠 때마다 새로운 문제가 나와요.</p>
+      <p>A1~C2 중 레벨을 고르면 <b>문법 15문제, 어휘 15문제, 총 30문제</b>를 무작위로 출제합니다. 칠 때마다 새로운 문제가 나와요.</p>
       <div class="namebox"><span>👤 학습자 이름</span><input id="nm" maxlength="20" placeholder="이름을 입력하세요" value="${esc(ST.name)}"><span id="nmok"></span>
         <span style="margin-left:auto"><a class="btn" href="#records">📈 내 기록 (${n}회)</a> <a class="btn" href="#wrongs">📕 누적 오답노트</a></span></div>
       <div class="lvgrid">`;
