@@ -318,9 +318,5 @@
     });
   }
 
-  /* ---------- header ---------- */
-  $('#hdr').innerHTML=`<div class="wrap"><a class="brand" href="#"><span class="lv">TEST</span><span class="tt">1500 Preguntas<small>PRUEBA DE NIVEL · 레벨테스트</small></span></a>
-    <nav class="levels"><a href="#" class="on">테스트</a><a href="#records">내 기록</a></nav>
-    <select class="lvsel" onchange="location.hash=this.value"><option value="">테스트</option><option value="records">내 기록</option></select></div>`;
   route();
 })();

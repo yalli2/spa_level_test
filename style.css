@@ -255,3 +255,11 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 }
 
 .stat .gchip{color:#fff;font-size:13px;vertical-align:middle}
+
+/* badge (no header/footer) */
+.lvtop{padding-top:22px}
+.lvbadge{display:inline-block;background:var(--red);color:#fff;font-weight:800;border-radius:12px;padding:6px 14px;font-size:17px;letter-spacing:.3px;text-decoration:none;box-shadow:0 2px 8px rgba(179,38,30,.25)}
+.lvbadge:hover{background:#951e17}
+.hero{padding-top:14px}
+.tbar{padding-top:10px}
+.rec-top{margin-top:10px}
