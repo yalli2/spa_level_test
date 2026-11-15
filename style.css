@@ -263,3 +263,21 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .hero{padding-top:14px}
 .tbar{padding-top:10px}
 .rec-top{margin-top:10px}
+
+/* level recommendation */
+.recrule{grid-column:1/-1}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rule{border:1.5px solid var(--c);border-radius:14px;padding:12px 14px;background:#fff;display:flex;flex-direction:column;gap:2px}
+.rule b{color:var(--c);font-size:15px}
+.rule .sc{font-size:22px;font-weight:800;line-height:1.3}
+.rule .gr{font-size:12.5px;color:var(--muted);font-weight:700}
+.rule p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.reccard{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;background:var(--paper);border:2px solid;border-radius:20px;padding:20px;margin:0 0 14px;box-shadow:var(--shadow)}
+.recicon{width:96px;height:96px;border-radius:20px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:30px;font-weight:800;line-height:1}
+.recicon small{font-size:13px;margin-top:8px;font-weight:700}
+.recbody h3{margin:0 0 4px;font-size:19px}
+.recbody p{margin:0 0 8px;color:var(--muted);font-size:14.5px}
+.recbody ul{margin:0;padding-left:18px;font-size:14px}
+.recbody li{margin:2px 0}
+.recchip{font-weight:800;font-size:12.5px;white-space:nowrap}
+@media (max-width:760px){.rules{grid-template-columns:1fr}.reccard{grid-template-columns:1fr;justify-items:start}.recicon{width:76px;height:76px;font-size:24px}}

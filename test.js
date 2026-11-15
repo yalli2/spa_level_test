@@ -22,11 +22,54 @@
   function verdict(lv,g){
     const i=LEVELS.indexOf(lv), nx=LEVELS[i+1], pv=LEVELS[i-1];
     if(g==='A+'||g==='A') return nx ? `${lv} 수준을 완전히 익혔습니다! 다음 단계 <b>${nx}</b> 레벨테스트에 도전해 보세요.` : `최상급 ${lv}까지 완벽합니다. 원어민 수준의 정확성을 갖추고 있어요!`;
-    if(g==='B+'||g==='B') return `${lv} 수준을 대체로 잘 이해하고 있어요. 틀린 문제의 주제만 복습하면 ${lv}를 완성할 수 있습니다.`;
+    if(g==='B+') return `${lv} 수준을 잘 이해하고 있어요. 틀린 몇 문제만 정리하면 다음 단계로 넘어가도 좋습니다.`;
+    if(g==='B') return `${lv} 수준을 대체로 잘 이해하고 있어요. 틀린 문제의 주제만 복습하면 ${lv}를 완성할 수 있습니다.`;
     if(g==='C+'||g==='C') return `${lv}의 기본은 갖췄지만 보완이 필요해요. 오답노트로 약한 주제를 꾸준히 복습해 보세요.`;
     if(g==='D+'||g==='D') return `${lv}는 아직 조금 어려워요. 오답노트를 중심으로 복습한 뒤 다시 도전해 보세요.`;
     return pv ? `지금은 <b>${pv}</b> 레벨이 더 잘 맞을 수 있어요. ${pv} 레벨테스트로 현재 수준을 먼저 확인해 보세요.` : `기초부터 차근차근! 오답노트의 해설로 기본 문법·어휘부터 복습해 보세요.`;
   }
+
+
+  /* ---------- level recommendation ----------
+     85점 이상 (A+·A·B+)  → 상위 레벨 학습
+     60~84점 (B·C+·C·D+·D) → 현 레벨 유지
+     59점 이하 (F)        → 하위 레벨 학습 */
+  const REC_UP = 85, REC_STAY = 60;
+  function recommend(lv, score){
+    const i=LEVELS.indexOf(lv), nx=LEVELS[i+1], pv=LEVELS[i-1];
+    if(score>=REC_UP){
+      if(!nx) return {type:'top', icon:'★', label:'C2 완성', target:lv, color:'#1f7a4d',
+        title:`최고 레벨 C2 완성 단계`, desc:`${score}점으로 상위 진입 기준(85점)을 넘었어요. 더 높은 레벨이 없으니 C2 레벨테스트를 주기적으로 응시하며 정확도를 유지하세요.`,
+        plan:['C2 레벨테스트를 2~4주마다 다시 응시해 90점 이상 유지','틀린 문제의 관용 표현·뉘앙스를 예문과 함께 정리','실제 신문·문학 텍스트로 어휘 폭 넓히기']};
+      return {type:'up', icon:'▲', label:`${nx} 학습`, target:nx, color:'#1f7a4d',
+        title:`상위 레벨 <b>${nx}</b> 학습 추천`, desc:`${score}점으로 상위 진입 기준(85점 이상)을 넘었어요. ${lv}는 충분히 익혔으니 ${nx} 레벨 학습을 시작하세요.`,
+        plan:[`${nx} 레벨테스트를 응시해 출발점 확인`,`${lv} 오답노트의 틀린 주제만 가볍게 정리`,`${nx}에서 60점 미만이 나오면 ${lv} 복습과 병행`]};
+    }
+    if(score>=REC_STAY){
+      const near = score>=75 ? `조금만 더 하면 상위 레벨 기준(85점)에 닿아요.` : `${lv}의 핵심 문법·어휘를 다지는 것이 먼저예요.`;
+      return {type:'stay', icon:'●', label:`${lv} 유지`, target:lv, color:'#2457a6',
+        title:`현재 레벨 <b>${lv}</b> 유지 학습 추천`, desc:`${score}점은 현 레벨 유지 구간(60~84점)이에요. ${near}`,
+        plan:[`오답노트의 '보완이 필요한 주제'부터 복습`,`${lv} 레벨테스트를 1~2주 뒤 다시 응시`,`85점 이상이 나오면 ${nx?nx+' 레벨로 올라가기':'C2 완성 단계'}`]};
+    }
+    if(!pv) return {type:'base', icon:'▼', label:'A1 기초', target:lv, color:'#b3261e',
+      title:`A1 기초부터 차근차근`, desc:`${score}점은 하위 레벨 기준(59점 이하)이지만, A1이 가장 기초 레벨이므로 A1 기초 문법·어휘부터 다지세요.`,
+      plan:['오답노트 해설로 기본 동사·관사·대명사부터 복습','A1 레벨테스트를 1~2주 간격으로 재응시','60점 이상이 되면 A1 유지 학습, 85점 이상이면 A2로']};
+    return {type:'down', icon:'▼', label:`${pv} 학습`, target:pv, color:'#b3261e',
+      title:`하위 레벨 <b>${pv}</b> 학습 추천`, desc:`${score}점은 하위 레벨 기준(59점 이하)이에요. ${lv}를 무리하게 이어가기보다 ${pv}의 기초를 먼저 다지는 것이 효과적입니다.`,
+      plan:[`${pv} 레벨테스트로 기초 수준 확인`,`${pv}에서 85점 이상이 나오면 ${lv}에 다시 도전`,`${lv} 오답노트는 참고용으로 보관`]};
+  }
+  function recCard(r){
+    const c=recommend(r.level,r.score);
+    const btn = c.type==='up' ? `<a class="btn primary" href="#test/${c.target}">${c.target} 레벨테스트 응시 →</a>`
+      : c.type==='down' ? `<a class="btn primary" href="#test/${c.target}">${c.target} 레벨테스트 응시 →</a>`
+      : `<a class="btn primary" href="#test/${r.level}">${r.level} 다시 응시 →</a>`;
+    return `<div class="reccard" style="border-color:${c.color}">
+      <div class="recicon" style="background:${c.color}">${c.icon}<small>${c.label}</small></div>
+      <div class="recbody"><h3>${c.title}</h3><p>${c.desc}</p>
+        <ul>${c.plan.map(p=>`<li>${p}</li>`).join('')}</ul>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">${btn}</div></div></div>`;
+  }
+  const recChip = r => { const c=recommend(r.level,r.score); return `<span class="recchip" style="color:${c.color}">${c.icon} ${c.label}</span>`; };
 
   /* ---------- storage ---------- */
   function load(){ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return {}; } }
@@ -82,7 +125,7 @@
       html+=`<a class="lvcard" href="#test/${lv}">
         <span class="big">${lv}</span><span class="nm">${LVINFO[lv].ko} <span class="mini">${LVINFO[lv].es}</span></span>
         <span class="ds">30문항 · 약 15~25분</span>
-        <span class="last">${r?`최근 ${fmtShort(r.date)} · ${r.score}점 <span class="gchip ${gcls(r.grade)}">${r.grade}</span>`:`<span>아직 응시 기록 없음</span><span class="btn primary" style="padding:4px 10px;font-size:12.5px">시작 →</span>`}</span>
+        <span class="last">${r?`최근 ${fmtShort(r.date)} · ${r.score}점 <span class="gchip ${gcls(r.grade)}">${r.grade}</span> ${recChip(r)}`:`<span>아직 응시 기록 없음</span><span class="btn primary" style="padding:4px 10px;font-size:12.5px">시작 →</span>`}</span>
         ${cnt?`<span class="mini">응시 ${cnt}회</span>`:''}
       </a>`;
     }
@@ -101,6 +144,14 @@
         <tr><td>85–89</td><td><span class="gchip g-Bp">B+</span></td><td>65–69</td><td><span class="gchip g-Dp">D+</span></td></tr>
         <tr><td>80–84</td><td><span class="gchip g-B">B</span></td><td>60–64</td><td><span class="gchip g-D">D</span></td></tr>
         <tr><td colspan="2" class="mini">1문항 = 100/30점, 반올림</td><td>0–59</td><td><span class="gchip g-F">F</span></td></tr></table>
+      </div>
+      <div class="panel recrule"><h3>🧭 레벨 추천 기준</h3>
+        <div class="rules">
+          <div class="rule" style="--c:#1f7a4d"><b>▲ 상위 레벨 학습</b><span class="sc">85점 이상</span><span class="gr">A+ · A · B+</span><p>이 레벨을 충분히 익혔어요. 한 단계 위 레벨로 올라가세요.</p></div>
+          <div class="rule" style="--c:#2457a6"><b>● 현 레벨 유지</b><span class="sc">60 ~ 84점</span><span class="gr">B · C+ · C · D+ · D</span><p>오답 주제를 복습하며 같은 레벨을 계속 학습하세요.</p></div>
+          <div class="rule" style="--c:#b3261e"><b>▼ 하위 레벨 학습</b><span class="sc">59점 이하</span><span class="gr">F</span><p>한 단계 아래 레벨에서 기초를 먼저 다지세요.</p></div>
+        </div>
+        <p class="mini" style="margin:8px 0 0">A1에서 59점 이하는 A1 기초 학습, C2에서 85점 이상은 C2 완성 단계로 안내합니다.</p>
       </div>
     </section>`;
     app.innerHTML=html; window.scrollTo(0,0);
@@ -210,9 +261,8 @@
               <div><b>${fmtDur(r.dur)}</b>소요 시간</div>
               ${diff!=null?`<div><b style="color:${diff>=0?'var(--ok)':'var(--bad)'}">${diff>0?'▲ +':diff<0?'▼ ':'± '}${diff}점</b>지난 ${r.level} 대비</div>`:''}
             </div></div></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <a class="btn primary" href="#test/${r.level}">${r.level} 다시 응시 →</a>
-          <a class="btn" href="#records">📈 내 기록 보기</a></div>
+        ${recCard(r)}
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="#test/${r.level}">${r.level} 다시 응시</a><a class="btn" href="#records">📈 내 기록 보기</a></div>
         ${Object.keys(topics).length?`<div class="panel" style="margin-top:16px"><h3 style="font-size:15px">보완이 필요한 주제</h3><div class="topics">${Object.entries(topics).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<span>${esc(k)}${n>1?' ×'+n:''}</span>`).join('')}</div></div>`:''}
         <div class="rtabs"><button class="on" data-f="w">오답노트 (${wrongItems.length})</button><button data-f="all">전체 30문항</button></div>
         <div class="wn" id="wn"></div></section>`;
@@ -259,8 +309,8 @@
         <div class="stat"><b>${avg}점</b><span>평균 점수</span></div>
         ${recFilter==='all'?`<div class="stat"><b>${last.score}점 <span class="gchip ${gcls(last.grade)}">${last.grade}</span></b><span>최근 회차 (${last.level})</span>`:`<div class="stat"><b style="color:${last.score-first.score>=0?'var(--ok)':'var(--bad)'}">${R.length>1?(last.score-first.score>=0?'+':'')+(last.score-first.score)+'점':'–'}</b><span>첫 회차 대비 변화 (${recFilter})`}</span></div></div>
         <div class="chart">${chart(R)}</div>
-        <table class="rtable"><tr><th>회차</th><th>날짜</th><th>레벨</th><th>점수</th><th>등급</th><th class="hm">문법</th><th class="hm">어휘</th><th class="hm">소요</th><th>오답</th><th></th></tr>
-        ${R.slice().reverse().map(r=>`<tr class="row" data-no="${r.no}"><td><b>${r.no}</b></td><td>${fmtDate(r.date)}</td><td><b>${r.level}</b></td><td><b>${r.score}</b></td><td><span class="gchip ${gcls(r.grade)}">${r.grade}</span></td><td class="hm">${r.g}/15</td><td class="hm">${r.v}/15</td><td class="hm">${fmtDur(r.dur)}</td><td style="color:var(--bad);font-weight:700">${30-r.correct}</td><td><button class="del" data-del="${r.no}" title="삭제">✕</button></td></tr>`).join('')}
+        <table class="rtable"><tr><th>회차</th><th>날짜</th><th>레벨</th><th>점수</th><th>등급</th><th class="hm">문법</th><th class="hm">어휘</th><th class="hm">소요</th><th>오답</th><th>추천</th><th></th></tr>
+        ${R.slice().reverse().map(r=>`<tr class="row" data-no="${r.no}"><td><b>${r.no}</b></td><td>${fmtDate(r.date)}</td><td><b>${r.level}</b></td><td><b>${r.score}</b></td><td><span class="gchip ${gcls(r.grade)}">${r.grade}</span></td><td class="hm">${r.g}/15</td><td class="hm">${r.v}/15</td><td class="hm">${fmtDur(r.dur)}</td><td style="color:var(--bad);font-weight:700">${30-r.correct}</td><td>${recChip(r)}</td><td><button class="del" data-del="${r.no}" title="삭제">✕</button></td></tr>`).join('')}
         </table>`;
     }
     html+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 110px">
