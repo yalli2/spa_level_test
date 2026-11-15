@@ -5,7 +5,6 @@
     A1:{ko:'입문', es:'Inicial'}, A2:{ko:'초급', es:'Elemental'}, B1:{ko:'중급', es:'Intermedio'},
     B2:{ko:'중상급', es:'Intermedio alto'}, C1:{ko:'고급', es:'Avanzado'}, C2:{ko:'최상급', es:'Maestría'}
   };
-  const PRACTICE = l => `https://yalli2.github.io/1500_${l}/`;
   const KEY = 'vap1500_leveltest';
   const L = 'ABCD';
   const $ = (s,el=document)=>el.querySelector(s);
@@ -24,9 +23,9 @@
     const i=LEVELS.indexOf(lv), nx=LEVELS[i+1], pv=LEVELS[i-1];
     if(g==='A+'||g==='A') return nx ? `${lv} 수준을 완전히 익혔습니다! 다음 단계 <b>${nx}</b> 레벨테스트에 도전해 보세요.` : `최상급 ${lv}까지 완벽합니다. 원어민 수준의 정확성을 갖추고 있어요!`;
     if(g==='B+'||g==='B') return `${lv} 수준을 대체로 잘 이해하고 있어요. 틀린 문제의 주제만 복습하면 ${lv}를 완성할 수 있습니다.`;
-    if(g==='C+'||g==='C') return `${lv}의 기본은 갖췄지만 보완이 필요해요. ${lv} 연습 사이트에서 세트별로 꾸준히 풀어 보세요.`;
+    if(g==='C+'||g==='C') return `${lv}의 기본은 갖췄지만 보완이 필요해요. 오답노트로 약한 주제를 꾸준히 복습해 보세요.`;
     if(g==='D+'||g==='D') return `${lv}는 아직 조금 어려워요. 오답노트를 중심으로 복습한 뒤 다시 도전해 보세요.`;
-    return pv ? `지금은 <b>${pv}</b> 레벨이 더 잘 맞을 수 있어요. ${pv} 레벨테스트로 현재 수준을 먼저 확인해 보세요.` : `기초부터 차근차근! ${lv} 연습 사이트의 문법·어휘 세트로 시작해 보세요.`;
+    return pv ? `지금은 <b>${pv}</b> 레벨이 더 잘 맞을 수 있어요. ${pv} 레벨테스트로 현재 수준을 먼저 확인해 보세요.` : `기초부터 차근차근! 오답노트의 해설로 기본 문법·어휘부터 복습해 보세요.`;
   }
 
   /* ---------- storage ---------- */
@@ -213,7 +212,6 @@
             </div></div></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <a class="btn primary" href="#test/${r.level}">${r.level} 다시 응시 →</a>
-          <a class="btn" href="${PRACTICE(r.level)}" target="_blank">${r.level} 연습 사이트에서 복습</a>
           <a class="btn" href="#records">📈 내 기록 보기</a></div>
         ${Object.keys(topics).length?`<div class="panel" style="margin-top:16px"><h3 style="font-size:15px">보완이 필요한 주제</h3><div class="topics">${Object.entries(topics).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<span>${esc(k)}${n>1?' ×'+n:''}</span>`).join('')}</div></div>`:''}
         <div class="rtabs"><button class="on" data-f="w">오답노트 (${wrongItems.length})</button><button data-f="all">전체 30문항</button></div>
@@ -322,7 +320,7 @@
 
   /* ---------- header ---------- */
   $('#hdr').innerHTML=`<div class="wrap"><a class="brand" href="#"><span class="lv">TEST</span><span class="tt">1500 Preguntas<small>PRUEBA DE NIVEL · 레벨테스트</small></span></a>
-    <nav class="levels"><a href="#" class="on">테스트</a><a href="#records">내 기록</a>${LEVELS.map(l=>`<a href="${PRACTICE(l)}" title="${l} 연습 사이트">${l}</a>`).join('')}</nav>
-    <select class="lvsel" onchange="location.href=this.value"><option value="#">테스트</option><option value="#records">내 기록</option>${LEVELS.map(l=>`<option value="${PRACTICE(l)}">${l} 연습</option>`).join('')}</select></div>`;
+    <nav class="levels"><a href="#" class="on">테스트</a><a href="#records">내 기록</a></nav>
+    <select class="lvsel" onchange="location.hash=this.value"><option value="">테스트</option><option value="records">내 기록</option></select></div>`;
   route();
 })();
