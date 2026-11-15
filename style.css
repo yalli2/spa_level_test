@@ -180,7 +180,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .gtable{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--paper);border-radius:14px;overflow:hidden}
 .gtable th,.gtable td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:center}
 .gtable th{background:#f4eee5;font-weight:700}
-.info2{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-top:24px;margin-bottom:40px}
+.info2{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-top:20px;margin-bottom:16px;align-items:start}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px 20px}
 .panel h3{margin:0 0 10px;font-size:17px}
 .panel ol{margin:0;padding-left:18px;font-size:14px;color:var(--muted)}
